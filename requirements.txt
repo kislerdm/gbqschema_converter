@@ -1,1 +1,2 @@
 fastjsonschema >= 2.14.4
+google-cloud-bigquery >= 1.24.0

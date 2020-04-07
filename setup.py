@@ -2,7 +2,7 @@
 # www.dkisler.com
 
 import os
-from setuptools import setup
+from setuptools import setup, find_namespace_packages
 
 
 DIR = os.path.abspath(os.path.dirname(__file__))
@@ -12,7 +12,7 @@ with open(os.path.join(DIR, 'requirements.txt')) as f:
 
 
 setup(
-    name='gbqschema_to_jsonschema',
+    name='gbqschema_converter',
     version='1.0',
     description="Library to convert Google BigQuery Schema to Json Schema",
     classifiers=[
@@ -25,7 +25,9 @@ setup(
     author="Dmitry Kisler",
     author_email=["admin@dkisler.com"],
     license='MIT',
-    packages=["gbqschema_to_jsonschema"],
+    packages=("gbqschema_converter", 
+              "gbqschema_converter.gbqschema_to_jsonschema",
+              "gbqschema_converter.jsonschema_to_gbqschema"),
     install_requires=requirements,
     include_package_data=True,
     zip_safe=False
