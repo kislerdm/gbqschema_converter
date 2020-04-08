@@ -30,20 +30,22 @@ TEMPLATE_GBQ_COLUMN = {
 
 
 def _converter(json_schema: dict, 
-               to_sdk_schema: bool=False) -> Union[List, List[SchemaField]]:
-    """Base function to convert Google Big Query table schema, JSON representation.
+               to_sdk_schema: bool = False) -> Union[List, List[SchemaField]]:
+    """Base function to convert Google BigQuery table schema, JSON representation.
     
     Args:
+      
       json_schema: Json schema
                  read https://json-schema.org/
                  for details.
     
     Returns:
-      Google Big Query table schema.
+      
+      Google BigQuery table schema.
     """
     def __gbq_columns(properties: dict,
-                     required: list = None) -> list:
-        """Function to define Google Big Query table columns in JSON schema format.
+                      required: list = None) -> list:
+        """Function to define Google BigQuery table columns in JSON schema format.
 
         Column format:
         [
@@ -62,10 +64,13 @@ def _converter(json_schema: dict,
         ]
 
         Args:
+          
           properties: Json schema properties dictionary.
+          
           required: List of required keys.
 
         Returns:
+          
           List of column definition dict objects.
         """
         output = []
@@ -112,17 +117,20 @@ def _converter(json_schema: dict,
 
 
 def json_representation(json_schema: dict) -> list:
-    """Function to convert json schema to Google Big Query schema in JSON representation.
+    """Function to convert json schema to Google BigQuery schema in JSON representation.
 
     Args:
+      
       json_schema: Json schema
                  read https://json-schema.org/
                  for details.
 
     Returns:
-      Google Big Query table json schema as list of dict.
+      
+      Google BigQuery table json schema as list of dict.
 
     Raises:
+      
       fastjsonschema.JsonSchemaDefinitionException: Error occured if input json schema is invalid.
     """
     try:
@@ -133,14 +141,16 @@ def json_representation(json_schema: dict) -> list:
 
 
 def sdk_representation(json_schema: dict) -> List[SchemaField]:
-    """Function to convert json schema to Google Big Query schema in Google SDK representation.
+    """Function to convert json schema to Google BigQuery schema in Google SDK representation.
 
     Args:
-      json_schema: json schema
+      
+      json_schema: Json schema
                  read https://json-schema.org/
                  for details.
 
     Returns:
+      
       List of SchemaField objects.
     """
     try:

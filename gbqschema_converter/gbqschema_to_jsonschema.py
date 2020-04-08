@@ -103,19 +103,23 @@ map_types = MapTypes(
 
 def json_representation(gbq_schema: dict,
                         additional_properties: bool = False) -> dict:
-    """Function to convert Google Big Query schema in JSON representation to json schema.
+    """Function to convert Google BigQuery schema in JSON representation to json schema.
 
     Args:
-      gbq_schema: Bigquery schema, JSON representation
+      
+      gbq_schema: BigQuery schema, JSON representation
                 read https://cloud.google.com/bigquery/docs/schemas#creating_a_json_schema_file 
                 for details.
+      
       additional_properties: Json schema should contain "additionalProperties".
 
     Returns:
+      
       Json schema as dict.
     
     Raises:
-      fastjsonschema.JsonSchemaException: Error occured if input Google Big Query schema is invalid.
+      
+      fastjsonschema.JsonSchemaException: Error occured if input Google BigQuery schema is invalid.
     """
     try:
         validate_json(gbq_schema)
@@ -142,15 +146,18 @@ def json_representation(gbq_schema: dict,
 
 def sdk_representation(gbq_schema: List[SchemaField],
                        additional_properties: bool = False) -> dict:
-    """Function to convert Google Big Query schema in Google SDK representation to json schema.
+    """Function to convert Google BigQuery schema in Google SDK representation to json schema.
 
     Args:
-      gbq_schema: bigquery schema, SDK repsentation
+      
+      gbq_schema: BigQuery schema, SDK repsentation
                 read https://googleapis.dev/python/bigquery/latest/generated/google.cloud.bigquery.schema.SchemaField.html
                 for details.
-      additional_properties: jsonschema should contain "additionalProperties".
+      
+      additional_properties: Json Schema should contain "additionalProperties".
 
     Returns:
+      
       json schema as dict.
     """
     output = deepcopy(TEMPLATE)

@@ -1,3 +1,6 @@
+# Dmitry Kisler © 2020
+# www.dkisler.com
+
 import pathlib
 import pytest
 import importlib.util
