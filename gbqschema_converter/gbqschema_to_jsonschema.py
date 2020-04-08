@@ -1,9 +1,11 @@
 # Dmitry Kisler © 2020
 # www.dkisler.com
 
+import json
+from copy import deepcopy
 from typing import Union, Tuple, List
 from collections import namedtuple
-from google.cloud import bigquery
+from google.cloud.bigquery import SchemaField
 import fastjsonschema
 
 
@@ -58,7 +60,7 @@ gbq_schema = {
     },
 }
 
-validate = fastjsonschema.compile(gbq_schema)
+validate_json = fastjsonschema.compile(gbq_schema)
 
 TEMPLATE = {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -100,7 +102,7 @@ map_types = MapTypes(
 )
 
 
-def representation_json(gbq_schema: dict,
+def json_representation(gbq_schema: dict,
                         additional_properties: bool = False) -> dict:
     """Function to convert Google Big Query schema in JSON representation to json schema.
 
@@ -117,11 +119,11 @@ def representation_json(gbq_schema: dict,
       fastjsonschema.JsonSchemaException: Error occured if input Google Big Query schema is invalid.
     """
     try:
-        validate(gbq_schema)
+        validate_json(gbq_schema)
     except fastjsonschema.JsonSchemaException as ex:
         raise ex
-
-    output = TEMPLATE.copy()
+        
+    output = deepcopy(TEMPLATE)
 
     for element in gbq_schema:
         key = element['name']
@@ -139,8 +141,8 @@ def representation_json(gbq_schema: dict,
     return output
 
 
-def representation_google_sdk(gbq_schema: List[bigquery.SchemaField],
-                              restrictive: bool = False) -> dict:
+def sdk_representation(gbq_schema: List[SchemaField],
+                       additional_properties: bool = False) -> dict:
     """Function to convert Google Big Query schema in Google SDK representation to json schema.
 
     Args:
@@ -152,4 +154,20 @@ def representation_google_sdk(gbq_schema: List[bigquery.SchemaField],
     Returns:
       json schema as dict.
     """
-    pass
+    output = deepcopy(TEMPLATE)
+    
+    for element in gbq_schema:
+        key = element.name
+
+        output['definitions']['element']['properties'][key] = getattr(map_types, 
+                                                                      element.field_type)
+
+        if element.description:
+            output['definitions']['element']['properties'][key]['description'] = element.description
+
+        if element.mode == "REQUIRED":
+            output['definitions']['element']['required'].append(key)
+
+    output['definitions']['element']['additionalProperties'] = additional_properties
+
+    return output

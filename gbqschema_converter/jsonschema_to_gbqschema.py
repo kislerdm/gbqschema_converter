@@ -7,7 +7,7 @@ from google.cloud import bigquery
 import fastjsonschema
 
 
-def representation_json(json_schema: dict) -> dict:
+def json_representation(json_schema: dict) -> dict:
     """Function to convert json schema to Google Big Query schema in JSON representation.
 
     Args:
@@ -29,7 +29,7 @@ def representation_json(json_schema: dict) -> dict:
     pass
 
 
-def representation_google_sdk(json_schema: dict) -> List[bigquery.SchemaField]:
+def sdk_representation(json_schema: dict) -> List[bigquery.SchemaField]:
     """Function to convert json schema to Google Big Query schema in Google SDK representation.
 
     Args:
