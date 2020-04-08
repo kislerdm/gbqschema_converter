@@ -18,7 +18,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/kislerdm/gbqschema_converter",
     author="Dmitry Kisler",
-    author_email=["admin@dkisler.com"],
+    author_email="admin@dkisler.com",
     license='MIT',
     classifiers=[
         "Development Status :: 3 - Alpha",
