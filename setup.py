@@ -23,6 +23,7 @@ setup(
     classifiers=[
         "Development Status :: 1 - Alpha",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "License :: OSI Approved :: MIT License",
@@ -31,5 +32,10 @@ setup(
     packages=["gbqschema_converter"],
     install_requires=requirements,
     include_package_data=True,
-    zip_safe=False
+    entry_points={
+        "console_scripts": [
+            "json2gbq = gbqschema_converter.__main__:json_to_gbq",
+            "gbq2json = gbqschema_converter.__main__:gbq_to_json",
+        ]
+    },
 )
