@@ -1,0 +1,38 @@
+[{
+    "description": "Att 1",
+    "name": "att_01",
+    "type": "INTEGER",
+    "mode": "NULLABLE"
+  },
+  {
+    "description": "Att 2",
+    "name": "att_02",
+    "type": "NUMERIC",
+    "mode": "REQUIRED"
+  },
+  {
+    "name": "att_03",
+    "type": "STRING",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "att_04",
+    "type": "BOOLEAN",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "att_05",
+    "type": "DATE",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "att_06",
+    "type": "DATETIME",
+    "mode": "NULLABLE"
+  },
+  {
+    "name": "att_07",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE"
+  }
+]

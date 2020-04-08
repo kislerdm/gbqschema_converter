@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/element"
+  },
+  "definitions": {
+    "element": {
+      "type": "object",
+      "properties": {
+        "att_01": {
+          "type": "integer",
+          "description": "Att 1"
+        },
+        "att_02": {
+          "type": "number",
+          "description": "Att 2"
+        },
+        "att_03": {
+          "type": "string"
+        },
+        "att_04": {
+          "type": "boolean"
+        },
+        "att_05": {
+          "type": "string",
+          "format": "date"
+        },
+        "att_06": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "att_07": {
+          "type": "string",
+          "format": "time"
+        }
+      },
+      "required": [
+        "att_02"
+      ]
+    }
+  }
+}
