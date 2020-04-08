@@ -10,4 +10,4 @@ References:
 - https://json-schema.org/
 """
 __version__ = "1.0"
-__all__ = ('__version__', 'gbqschema_to_jsonschema', 'jsonschema_to_gbqschema')
+__all__ = ['__version__', 'gbqschema_to_jsonschema', 'jsonschema_to_gbqschema']
