@@ -8,4 +8,4 @@ if [ $(python3.7 -m twine check ${PWD}/dist/* | grep FAIL | wc -l) -gt 0 ]; then
     echo "twine validation failed"
     exit
 fi
-echo "Valide!"
+echo "OK"
