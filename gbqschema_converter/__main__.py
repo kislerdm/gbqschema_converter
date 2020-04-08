@@ -2,6 +2,7 @@
 # www.dkisler.com
 
 import sys
+import time
 import argparse
 import logging
 import json
@@ -65,8 +66,10 @@ def _input() -> dict:
 
 def json_to_gbq():
     try:
+        t0 = time.time()
         schema_out = to_gbq(_input())
-        print(json.dumps(schema_out, indent=2))
+        logs.info(f"""Output ({round((time.time() - t0) * 1000, 2)} ms elapsed):
+{json.dumps(schema_out, indent=2)}""")
     except Exception as ex:
         logs.error(f"Schema converion error: {ex}")
         sys.exit(1)    
@@ -74,8 +77,10 @@ def json_to_gbq():
 
 def gbq_to_json():
     try:
+        t0 = time.time()
         schema_out = to_json(_input())
-        print(json.dumps(schema_out, indent=2))
+        logs.info(f"""Output ({round((time.time() - t0) * 1000, 2)} ms elapsed):
+{json.dumps(schema_out, indent=2)}""")
     except Exception as ex:
         logs.error(f"Schema converion error: {ex}")
         sys.exit(1)

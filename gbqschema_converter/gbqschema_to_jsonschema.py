@@ -16,17 +16,19 @@ gbq_schema = {
         "required": [
             "name",
             "type",
-            "mode"
         ],
         "properties": {
             "description": {
-                "type": "string"
+                "oneOf": [
+                    {"type": "string"},
+                    {"type": "null"},
+                ],
             },
             "name": {
                 "type": "string",
                 "examples": [
-                    "att1"
-                ]
+                    "att1",
+                ],
             },
             "type": {
                 "type": "string",
@@ -44,16 +46,23 @@ gbq_schema = {
                     "DATE",
                     "DATETIME",
                     "TIME",
-                    "TIMESTAMP"
-                ]
+                    "TIMESTAMP",
+                ],
             },
             "mode": {
-                "type": "string",
-                "enum": [
-                    "REQUIRED",
-                    "NULLABLE"
-                ]
-            }
+                "oneOf": [
+                    {
+                        "type": "string",
+                        "enum": [
+                            "REQUIRED",
+                            "NULLABLE"
+                        ]
+                    },
+                    {
+                        "type": "null",
+                    },
+                ],
+            },
         },
         "additionalProperties": False,
     },
@@ -106,39 +115,42 @@ def json_representation(gbq_schema: dict,
     """Function to convert Google BigQuery schema in JSON representation to json schema.
 
     Args:
-      
+
       gbq_schema: BigQuery schema, JSON representation
                 read https://cloud.google.com/bigquery/docs/schemas#creating_a_json_schema_file 
                 for details.
-      
+
       additional_properties: Json schema should contain "additionalProperties".
 
     Returns:
-      
+
       Json schema as dict.
-    
+
     Raises:
-      
+
       fastjsonschema.JsonSchemaException: Error occured if input Google BigQuery schema is invalid.
     """
     try:
         validate_json(gbq_schema)
     except fastjsonschema.JsonSchemaException as ex:
         raise ex
-        
+
     output = deepcopy(TEMPLATE)
 
     for element in gbq_schema:
         key = element['name']
-        
-        output['definitions']['element']['properties'][key] = getattr(map_types, element['type'])
-        
+
+        output['definitions']['element']['properties'][key] = getattr(map_types, 
+                                                                      element['type'])
+
         if 'description' in element:
-            output['definitions']['element']['properties'][key]['description'] = element['description']
-        
-        if element['mode'] == "REQUIRED":
-            output['definitions']['element']['required'].append(key)
-    
+            if element['description']:
+                output['definitions']['element']['properties'][key]['description'] = element['description']
+
+        if 'mode' in element:
+            if element['mode'] == "REQUIRED":
+                output['definitions']['element']['required'].append(key)
+
     output['definitions']['element']['additionalProperties'] = additional_properties
 
     return output
@@ -149,23 +161,23 @@ def sdk_representation(gbq_schema: List[SchemaField],
     """Function to convert Google BigQuery schema in Google SDK representation to json schema.
 
     Args:
-      
+
       gbq_schema: BigQuery schema, SDK repsentation
                 read https://googleapis.dev/python/bigquery/latest/generated/google.cloud.bigquery.schema.SchemaField.html
                 for details.
-      
+
       additional_properties: Json Schema should contain "additionalProperties".
 
     Returns:
-      
+
       json schema as dict.
     """
     output = deepcopy(TEMPLATE)
-    
+
     for element in gbq_schema:
         key = element.name
 
-        output['definitions']['element']['properties'][key] = getattr(map_types, 
+        output['definitions']['element']['properties'][key] = getattr(map_types,
                                                                       element.field_type)
 
         if element.description:
