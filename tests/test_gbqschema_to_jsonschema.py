@@ -67,7 +67,7 @@ def test_json_validator() -> None:
         module.json_representation(schema_in)
     except Exception as ex:
         assert "data[1].type must be one of" in str(ex),\
-            "Input validation doesn't work"
+            "Input validation 1 doesn't work"
 
     schema_in = [
         {
@@ -81,8 +81,8 @@ def test_json_validator() -> None:
     try:
         module.json_representation(schema_in)
     except Exception as ex:
-        assert "data[0] must contain only specified properties" in str(ex),\
-            "Input validation doesn't work"
+        assert "data[0] must not contain" in str(ex),\
+            "Input validation 2 doesn't work"
 
     schema_in = [
         {
@@ -95,8 +95,8 @@ def test_json_validator() -> None:
     try:
         module.json_representation(schema_in)
     except Exception as ex:
-        assert "data[0].mode must be one of" in str(ex),\
-            "Input validation doesn't work"
+        assert "data[0].mode must be valid exactly by one of oneOf definition" in str(ex),\
+            "Input validation 3 doesn't work"
 
     return
 

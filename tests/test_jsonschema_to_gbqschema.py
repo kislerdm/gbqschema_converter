@@ -163,31 +163,26 @@ def test_json_representation_conversion() -> None:
             "mode": "REQUIRED"
         },
         {
-            "description": None,
             "name": "att_03",
             "type": "STRING",
             "mode": "REQUIRED"
         },
         {
-            "description": None,
             "name": "att_04",
             "type": "BOOLEAN",
             "mode": "REQUIRED"
         },
         {
-            "description": None,
             "name": "att_05",
             "type": "DATE",
             "mode": "REQUIRED"
         },
         {
-            "description": None,
             "name": "att_06",
             "type": "DATETIME",
             "mode": "REQUIRED"
         },
         {
-            "description": None,
             "name": "att_07",
             "type": "TIMESTAMP",
             "mode": "REQUIRED"
