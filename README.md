@@ -17,8 +17,8 @@ gbqschema_converter
 
 Each of those modules has two main functions:
 
-- `json_representation`: corresponds to json output (input for `gbqschema_to_jsonschema`)
-- `sdk_representation`: corresponds to [Google Python SDK output](https://googleapis.dev/python/bigquery/latest/generated/google.cloud.bigquery.schema.SchemaField.html) (input for `gbqschema_to_jsonschema`).
+- `json_representation`: corresponds to json output (input for `gbqschema_to_jsonschema`).
+- `sdk_representation`: corresponds to [Google Python SDK format](https://googleapis.dev/python/bigquery/latest/generated/google.cloud.bigquery.schema.SchemaField.html) output (input for `gbqschema_to_jsonschema`).
 
 ## Installation
 
