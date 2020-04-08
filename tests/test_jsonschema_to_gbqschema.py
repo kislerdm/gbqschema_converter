@@ -1,10 +1,11 @@
-import os
+import pathlib
 import pytest
 import importlib.util
 from types import ModuleType
+from google.cloud.bigquery import SchemaField
 
 
-DIR = os.path.dirname(os.path.abspath(__file__))
+DIR = pathlib.Path(__file__).parent
 PACKAGE = "gbqschema_converter"
 MODULE = "jsonschema_to_gbqschema"
 
@@ -91,3 +92,127 @@ def test_json_validator() -> None:
     except Exception as ex:
         assert "Unknown type: 'objects'" in str(ex),\
             "Input validation doesn't work"
+
+
+schema_in = {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "array",
+    "items": {
+            "$ref": "#/definitions/element"
+    },
+    "definitions": {
+        "element": {
+            "type": "object",
+            "properties": {
+                "att_01": {
+                    "type": "integer",
+                    "description": "Att 1"
+                },
+                "att_02": {
+                    "type": "number",
+                    "description": "Att 2"
+                },
+                "att_03": {
+                    "type": "string"
+                },
+                "att_04": {
+                    "type": "boolean"
+                },
+                "att_05": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "att_06": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "att_07": {
+                    "type": "string",
+                    "format": "time"
+                },
+            },
+            "additionalProperties": True,
+            "required": [
+                "att_02",
+                "att_03",
+                "att_04",
+                "att_05",
+                "att_06",
+                "att_07",
+            ]
+        }
+    }
+}
+
+
+def test_json_representation_conversion() -> None:
+    schema_out = [
+        {
+            "description": "Att 1",
+            "name": "att_01",
+            "type": "INTEGER",
+            "mode": "NULLABLE"
+        },
+        {
+            "description": "Att 2",
+            "name": "att_02",
+            "type": "NUMERIC",
+            "mode": "REQUIRED"
+        },
+        {
+            "description": None,
+            "name": "att_03",
+            "type": "STRING",
+            "mode": "REQUIRED"
+        },
+        {
+            "description": None,
+            "name": "att_04",
+            "type": "BOOLEAN",
+            "mode": "REQUIRED"
+        },
+        {
+            "description": None,
+            "name": "att_05",
+            "type": "DATE",
+            "mode": "REQUIRED"
+        },
+        {
+            "description": None,
+            "name": "att_06",
+            "type": "DATETIME",
+            "mode": "REQUIRED"
+        },
+        {
+            "description": None,
+            "name": "att_07",
+            "type": "TIMESTAMP",
+            "mode": "REQUIRED"
+        },
+    ]
+
+    schema_convert = module.json_representation(schema_in)
+
+    assert schema_convert == schema_out,\
+        "Convertion doesn't work"
+
+    return
+
+
+def test_sdk_representation_conversion() -> None:
+    schema_out = [
+        SchemaField('att_01', 'INTEGER', 'NULLABLE', 'Att 1', ()),
+        SchemaField('att_02', 'NUMERIC', 'REQUIRED', 'Att 2', ()),
+        SchemaField('att_03', 'STRING', 'REQUIRED', None, ()),
+        SchemaField('att_04', 'BOOLEAN', 'REQUIRED', None, ()),
+        SchemaField('att_05', 'DATE', 'REQUIRED', None, ()),
+        SchemaField('att_06', 'DATETIME', 'REQUIRED', None, ()),
+        SchemaField('att_07', 'TIMESTAMP', 'REQUIRED', None, ()),
+    ]
+
+    schema_convert = module.sdk_representation(schema_in)
+
+    assert schema_convert == schema_out,\
+        "Convertion doesn't work"
+
+    return

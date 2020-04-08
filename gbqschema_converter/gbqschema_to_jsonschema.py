@@ -1,7 +1,6 @@
 # Dmitry Kisler © 2020
 # www.dkisler.com
 
-import json
 from copy import deepcopy
 from typing import Union, Tuple, List
 from collections import namedtuple
