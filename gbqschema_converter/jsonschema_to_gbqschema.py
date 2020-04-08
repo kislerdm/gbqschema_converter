@@ -93,6 +93,8 @@ def _converter(json_schema: dict,
 
             if 'description' in v:
                 gbq_column['description'] = v['description']
+            else:
+                _ = gbq_column.pop('description')
 
             if to_sdk_schema:
                 gbq_column = SchemaField(**gbq_column)

@@ -22,7 +22,7 @@ def get_args():
     Returns:
       
     """
-    parser = argparse.ArgumentParser("Google BigQuery table schema parser.")
+    parser = argparse.ArgumentParser("Google BigQuery table schema converter.")
     required_either = parser.add_mutually_exclusive_group(required=True)
     required_either.add_argument('-i', '--input', 
                                  help="Input object as string.",
