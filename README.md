@@ -5,7 +5,7 @@
 [![coverage](https://img.shields.io/static/v1?label=coverage&color=brightgreen&message=94%25)](./)
 [![test](https://img.shields.io/static/v1?label=tests&color=success&message=100%25)](./)
 
-Python library to convert [Google BigQuery table schema]() into [draft-07](https://json-schema.org/draft-07/json-schema-release-notes.html) [json schema](https://json-schema.org/) and vice versa.
+Python library to convert [Google BigQuery table schema](https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#datetime_type) into [draft-07](https://json-schema.org/draft-07/json-schema-release-notes.html) [json schema](https://json-schema.org/) and vice versa.
 
 The library includes two main modules:
 
@@ -33,7 +33,9 @@ python3 -m venv env && source ${PWD}/env/bin/activate
 
 ```bash
 (env) json2gbq -h
-usage: Google BigQuery table schema converter. [-h] (-i INPUT | -f FILE)
+usage: json2gbq [-h] (-i INPUT | -f FILE)
+
+Google BigQuery Table Schema Converter
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -95,7 +97,7 @@ Execution:
 Output:
 
 ```bash
-2020-04-08 21:42:51.700 [INFO ] [GBQ Table Schema Converter] Output (5.52 ms elapsed):
+2020-04-08 21:42:51.700 [INFO ] [Google BigQuery Table Schema Converter] Output (5.52 ms elapsed):
 [
   {
     "description": "Att 1",
@@ -126,12 +128,12 @@ Output:
   },
   {
     "name": "att_06",
-    "type": "DATETIME",
+    "type": "TIMESTAMP",
     "mode": "NULLABLE"
   },
   {
     "name": "att_07",
-    "type": "TIMESTAMP",
+    "type": "STRING",
     "mode": "NULLABLE"
   }
 ]
@@ -148,7 +150,7 @@ Execution:
 Output:
 
 ```bash
-2020-04-08 21:57:25.516 [INFO ] [GBQ Table Schema Converter] Output (6.39 ms elapsed):
+2020-04-08 21:57:25.516 [INFO ] [Google BigQuery Table Schema Converter] Output (6.39 ms elapsed):
 [
   {
     "description": "Att 1",
@@ -179,12 +181,12 @@ Output:
   },
   {
     "name": "att_06",
-    "type": "DATETIME",
+    "type": "TIMESTAMP",
     "mode": "NULLABLE"
   },
   {
     "name": "att_07",
-    "type": "TIMESTAMP",
+    "type": "STRING",
     "mode": "NULLABLE"
   }
 ]
@@ -194,7 +196,9 @@ Output:
 
 ```bash
 (env) gbq2json -h
-usage: Google BigQuery table schema converter. [-h] (-i INPUT | -f FILE)
+usage: gbq2json [-h] (-i INPUT | -f FILE)
+
+Google BigQuery Table Schema Converter
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -252,7 +256,7 @@ Execution:
 Output:
 
 ```bash
-2020-04-08 21:51:05.370 [INFO ] [GBQ Table Schema Converter] Output (1.08 ms elapsed):
+2020-04-08 21:51:05.370 [INFO ] [Google BigQuery Table Schema Converter] Output (1.08 ms elapsed):
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "array",
@@ -283,11 +287,11 @@ Output:
         },
         "att_06": {
           "type": "string",
-          "format": "date-time"
+          "pattern": "^[0-9]{4}-((|0)[1-9]|1[0-2])-((|[0-2])[1-9]|3[0-1])(|T)((|[0-1])[0-9]|2[0-3]):((|[0-5])[0-9]):((|[0-5])[0-9])(|.[0-9]{1,6})$"
         },
         "att_07": {
           "type": "string",
-          "format": "time"
+          "format": "date-time"
         }
       },
       "additionalProperties": false,
@@ -310,7 +314,7 @@ Execution:
 Output:
 
 ```bash
-2020-04-08 21:55:20.275 [INFO ] [GBQ Table Schema Converter] Output (1.72 ms elapsed):
+2020-04-08 21:55:20.275 [INFO ] [Google BigQuery Table Schema Converter] Output (1.72 ms elapsed):
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "array",
@@ -341,11 +345,11 @@ Output:
         },
         "att_06": {
           "type": "string",
-          "format": "date-time"
+          "pattern": "^[0-9]{4}-((|0)[1-9]|1[0-2])-((|[0-2])[1-9]|3[0-1])(|T)((|[0-1])[0-9]|2[0-3]):((|[0-5])[0-9]):((|[0-5])[0-9])(|.[0-9]{1,6})$"
         },
         "att_07": {
           "type": "string",
-          "format": "time"
+          "format": "date-time"
         }
       },
       "additionalProperties": false,
