@@ -179,12 +179,12 @@ def test_json_representation_conversion() -> None:
         },
         {
             "name": "att_06",
-            "type": "DATETIME",
+            "type": "TIMESTAMP",
             "mode": "REQUIRED"
         },
         {
             "name": "att_07",
-            "type": "TIMESTAMP",
+            "type": "STRING",
             "mode": "REQUIRED"
         },
     ]
@@ -204,8 +204,8 @@ def test_sdk_representation_conversion() -> None:
         SchemaField('att_03', 'STRING', 'REQUIRED', None, ()),
         SchemaField('att_04', 'BOOLEAN', 'REQUIRED', None, ()),
         SchemaField('att_05', 'DATE', 'REQUIRED', None, ()),
-        SchemaField('att_06', 'DATETIME', 'REQUIRED', None, ()),
-        SchemaField('att_07', 'TIMESTAMP', 'REQUIRED', None, ()),
+        SchemaField('att_06', 'TIMESTAMP', 'REQUIRED', None, ()),
+        SchemaField('att_07', 'STRING', 'REQUIRED', None, ()),
     ]
 
     schema_convert = module.sdk_representation(schema_in)

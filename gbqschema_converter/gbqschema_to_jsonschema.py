@@ -104,9 +104,15 @@ map_types = MapTypes(
     STRING={"type": "string"},
     BYTES={"type": "string"},
     DATE={"type": "string", "format": "date"},
-    DATETIME={"type": "string", "format": "date-time"},
-    TIME={"type": "string", "format": "time"},
-    TIMESTAMP={"type": "string", "format": "time"}
+    DATETIME={
+        "type": "string",
+        "pattern": "^[0-9]{4}-((|0)[1-9]|1[0-2])-((|[0-2])[1-9]|3[0-1])(|T)((|[0-1])[0-9]|2[0-3]):((|[0-5])[0-9]):((|[0-5])[0-9])(|.[0-9]{1,6})$"
+    },
+    TIME={
+        "type": "string",
+        "pattern": "^((|[0-1])[0-9]|2[0-3]):((|[0-5])[0-9]):((|[0-5])[0-9])(|.[0-9]{1,6})$"
+    },
+    TIMESTAMP={"type": "string", "format": "date-time"}
 )
 
 
@@ -140,7 +146,7 @@ def json_representation(gbq_schema: dict,
     for element in gbq_schema:
         key = element['name']
 
-        output['definitions']['element']['properties'][key] = getattr(map_types, 
+        output['definitions']['element']['properties'][key] = getattr(map_types,
                                                                       element['type'])
 
         if 'description' in element:
