@@ -10,10 +10,12 @@ from gbqschema_converter.jsonschema_to_gbqschema import json_representation as t
 from gbqschema_converter.gbqschema_to_jsonschema import json_representation as to_json
 
 
+help_string = "Google BigQuery Table Schema Converter"
+
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s.%(msecs)03d [%(levelname)-5s] [%(name)-12s] %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
-logs = logging.getLogger("GBQ Table Schema Converter")
+logs = logging.getLogger(help_string)
 
 
 def get_args():
@@ -22,7 +24,7 @@ def get_args():
     Returns:
       
     """
-    parser = argparse.ArgumentParser("Google BigQuery table schema converter.")
+    parser = argparse.ArgumentParser(description=help_string)
     required_either = parser.add_mutually_exclusive_group(required=True)
     required_either.add_argument('-i', '--input', 
                                  help="Input object as string.",
