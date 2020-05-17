@@ -9,3 +9,7 @@ if [ $(python3.7 -m twine check ${PWD}/dist/* | grep FAIL | wc -l) -gt 0 ]; then
     exit
 fi
 echo "OK"
+
+echo "Upload to pypi"
+
+twine upload ${PWD}/dist/*

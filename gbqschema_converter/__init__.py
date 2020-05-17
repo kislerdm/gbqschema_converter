@@ -9,5 +9,5 @@ References:
 - https://cloud.google.com/bigquery/docs/schemas#creating_a_json_schema_file
 - https://json-schema.org/
 """
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 __all__ = ['__version__', 'gbqschema_to_jsonschema', 'jsonschema_to_gbqschema']
