@@ -9,14 +9,15 @@ import fastjsonschema
 
 
 MapTypes = namedtuple("map_types",
-                      ['integer', 'number', 'boolean', 'string', 'date'])
+                      ['integer', 'number', 'boolean', 'string', 'date', 'object'])
 
 map_types = MapTypes(
-    integer="INTEGER",
-    number="NUMERIC",
+    integer="INT64",
+    number="FLOAT64",
     boolean="BOOLEAN",
     string="STRING",
-    date="DATE"
+    date="DATE",
+    object="RECORD"
 )
 
 TEMPLATE_GBQ_COLUMN = {
@@ -82,10 +83,7 @@ def _converter(json_schema: dict,
             else:
                 gbq_column['type'] = "TIMESTAMP" if v['format'] == "date-time"\
                     else getattr(map_types, v['format']) if v['format'] in map_types.__dir__()\
-                        else "STRING"
-
-            if to_sdk_schema:
-                gbq_column['field_type'] = gbq_column.pop('type')
+                    else "STRING"
 
             if required:
                 if k in required:
@@ -96,7 +94,12 @@ def _converter(json_schema: dict,
             else:
                 _ = gbq_column.pop('description')
 
+            if gbq_column['type'] == "RECORD":
+                gbq_column['fields'] = __gbq_columns(v['properties'],
+                                                     v['required'])
+                
             if to_sdk_schema:
+                gbq_column['field_type'] = gbq_column.pop('type')
                 gbq_column = SchemaField(**gbq_column)
                 
             output.append(gbq_column)
@@ -104,8 +107,7 @@ def _converter(json_schema: dict,
 
     output = []
 
-    if 'definitions' in json_schema\
-            or 'items' in json_schema:
+    if 'definitions' in json_schema:
         for prop in json_schema['definitions'].values():
             properties = prop['properties']
             required = prop['required'] if 'required' in prop else None

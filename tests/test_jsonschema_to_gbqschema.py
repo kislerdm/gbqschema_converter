@@ -2,7 +2,6 @@
 # www.dkisler.com
 
 import pathlib
-import pytest
 import importlib.util
 from types import ModuleType
 from google.cloud.bigquery import SchemaField
@@ -73,7 +72,7 @@ def test_json_validator() -> None:
     except Exception as ex:
         assert "Unknown type: 'array1'" in str(ex),\
             "Input validation doesn't work"
-    
+
     schema_in = {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "array",
@@ -153,13 +152,13 @@ def test_json_representation_conversion() -> None:
         {
             "description": "Att 1",
             "name": "att_01",
-            "type": "INTEGER",
+            "type": "INT64",
             "mode": "NULLABLE"
         },
         {
             "description": "Att 2",
             "name": "att_02",
-            "type": "NUMERIC",
+            "type": "FLOAT64",
             "mode": "REQUIRED"
         },
         {
@@ -199,8 +198,8 @@ def test_json_representation_conversion() -> None:
 
 def test_sdk_representation_conversion() -> None:
     schema_out = [
-        SchemaField('att_01', 'INTEGER', 'NULLABLE', 'Att 1', ()),
-        SchemaField('att_02', 'NUMERIC', 'REQUIRED', 'Att 2', ()),
+        SchemaField('att_01', 'INT64', 'NULLABLE', 'Att 1', ()),
+        SchemaField('att_02', 'FLOAT64', 'REQUIRED', 'Att 2', ()),
         SchemaField('att_03', 'STRING', 'REQUIRED', None, ()),
         SchemaField('att_04', 'BOOLEAN', 'REQUIRED', None, ()),
         SchemaField('att_05', 'DATE', 'REQUIRED', None, ()),
@@ -209,6 +208,99 @@ def test_sdk_representation_conversion() -> None:
     ]
 
     schema_convert = module.sdk_representation(schema_in)
+
+    assert schema_convert == schema_out,\
+        "Convertion doesn't work"
+
+    return
+
+
+schema_in_record = {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "array",
+    "items": {
+            "$ref": "#/definitions/element",
+    },
+    "definitions": {
+        "element": {
+            "type": "object",
+            "properties": {
+                "att_01": {
+                    "type": "integer",
+                    "description": "Att 1",
+                },
+                "att_02": {
+                    "type": "object",
+                    "description": "Att 2",
+                    "properties": {
+                        "att_11": {
+                            "type": "number",
+                        },
+                        "att_12": {
+                            "type": "string",
+                        },
+                    },
+                    "additionalProperties": False,
+                    "required": [
+                        "att_11",
+                    ],
+                },
+            },
+            "additionalProperties": False,
+            "required": [
+                "att_01",
+            ],
+        },
+    },
+}
+
+
+def test_json_representation_conversion_record() -> None:
+    schema_out = [
+        {
+            "description": "Att 1",
+            "name": "att_01",
+            "type": "INT64",
+            "mode": "REQUIRED"
+        },
+        {
+            "description": "Att 2",
+            "name": "att_02",
+            "type": "RECORD",
+            "mode": "NULLABLE",
+            "fields": [
+                {
+                    "name": "att_11",
+                    "type": "FLOAT64",
+                    "mode": "REQUIRED"
+                },
+                {
+                    "name": "att_12",
+                    "type": "STRING",
+                    "mode": "NULLABLE"
+                }
+            ]
+        },
+    ]
+
+    schema_convert = module.json_representation(schema_in_record)
+
+    assert schema_convert == schema_out,\
+        "Convertion doesn't work"
+
+    return
+
+
+def test_sdk_representation_conversion_record() -> None:
+    schema_out = [
+        SchemaField('att_01', 'INT64', 'REQUIRED', 'Att 1', ()),
+        SchemaField('att_02', 'RECORD', 'NULLABLE', 'Att 2', (
+            SchemaField('att_11', 'FLOAT64', 'REQUIRED', None, ()),
+            SchemaField('att_12', 'STRING', 'NULLABLE', None, ()))
+        )
+    ]
+
+    schema_convert = module.sdk_representation(schema_in_record)
 
     assert schema_convert == schema_out,\
         "Convertion doesn't work"

@@ -18,12 +18,8 @@ logging.basicConfig(level=logging.INFO,
 logs = logging.getLogger(help_string)
 
 
-def get_args():
-    """CL input parameter.
-    
-    Returns:
-      
-    """
+def get_args() -> argparse.Namespace:
+    """CL input parameters."""
     parser = argparse.ArgumentParser(description=help_string)
     required_either = parser.add_mutually_exclusive_group(required=True)
     required_either.add_argument('-i', '--input', 
