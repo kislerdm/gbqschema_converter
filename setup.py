@@ -12,7 +12,7 @@ README = (DIR / "README.md").read_text()
 
 setup(
     name='gbqschema_converter',
-    version='1.1.0',
+    version='1.2.0',
     description="Library to convert Google BigQuery Table Schema into Json Schema",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -21,7 +21,7 @@ setup(
     author_email="admin@dkisler.com",
     license='MIT',
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",

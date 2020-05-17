@@ -47,6 +47,7 @@ gbq_schema = {
                     "DATETIME",
                     "TIME",
                     "TIMESTAMP",
+                    "RECORD",
                 ],
             },
             "mode": {
@@ -64,7 +65,7 @@ gbq_schema = {
                 ],
             },
         },
-        "additionalProperties": False,
+        "additionalProperties": True,
     },
 }
 
@@ -77,15 +78,7 @@ TEMPLATE = {
         "$ref": "#/definitions/element"
     },
     "definitions": {
-        "element": {
-            "type": "object",
-            "properties": {
-
-            },
-            "additionalProperties": False,
-            "required": [
-            ],
-        },
+        "element": {},
     },
 }
 
@@ -112,7 +105,8 @@ map_types = MapTypes(
         "type": "string",
         "pattern": "^((|[0-1])[0-9]|2[0-3]):((|[0-5])[0-9]):((|[0-5])[0-9])(|.[0-9]{1,6})$"
     },
-    TIMESTAMP={"type": "string", "format": "date-time"}
+    TIMESTAMP={"type": "string", "format": "date-time"},
+    RECORD={"type": "object"},
 )
 
 
@@ -136,26 +130,42 @@ def json_representation(gbq_schema: dict,
 
       fastjsonschema.JsonSchemaException: Error occured if input Google BigQuery schema is invalid.
     """
-    try:
-        validate_json(gbq_schema)
-    except fastjsonschema.JsonSchemaException as ex:
-        raise ex
-
     output = deepcopy(TEMPLATE)
+    
+    def _converter(gbq_schema: dict) -> dict:
+        """Conversion step."""
+        try:
+            validate_json(gbq_schema)
+        except fastjsonschema.JsonSchemaException as ex:
+            raise ex
 
-    for element in gbq_schema:
-        key = element['name']
+        output = {
+            "type": "object",
+            "properties": {
+            },
+            "additionalProperties": False,
+            "required": [
+            ],
+        }
 
-        output['definitions']['element']['properties'][key] = getattr(map_types,
-                                                                      element['type'])
+        for element in gbq_schema:
+            key = element['name']
+            
+            output['properties'][key] = getattr(map_types, element['type'])
 
-        if 'description' in element:
-            if element['description']:
-                output['definitions']['element']['properties'][key]['description'] = element['description']
-
-        if 'mode' in element:
-            if element['mode'] == "REQUIRED":
-                output['definitions']['element']['required'].append(key)
+            if 'mode' in element:
+                if element['mode'] == "REQUIRED":
+                    output['required'].append(key)
+            
+            if element['type'] == "RECORD":
+                output['properties'][key] = _converter(element['fields'])
+                
+        if not output['required']:
+            _ = output.pop('required')
+            
+        return output
+    
+    output['definitions']['element'] = _converter(gbq_schema)
 
     output['definitions']['element']['additionalProperties'] = additional_properties
 
@@ -180,17 +190,33 @@ def sdk_representation(gbq_schema: List[SchemaField],
     """
     output = deepcopy(TEMPLATE)
 
-    for element in gbq_schema:
-        key = element.name
+    def _converter(gbq_schema: dict) -> dict:
+        output = {
+            "type": "object",
+            "properties": {
+            },
+            "additionalProperties": False,
+            "required": [
+            ],
+        }
+        
+        for element in gbq_schema:
+            key = element.name
 
-        output['definitions']['element']['properties'][key] = getattr(map_types,
-                                                                      element.field_type)
+            output['properties'][key] = getattr(map_types, element.field_type)
 
-        if element.description:
-            output['definitions']['element']['properties'][key]['description'] = element.description
+            if element.mode == "REQUIRED":
+                output['required'].append(key)
+            
+            if element.field_type == "RECORD":
+                output['properties'][key] = _converter(element.fields)
 
-        if element.mode == "REQUIRED":
-            output['definitions']['element']['required'].append(key)
+        if not output['required']:
+            _ = output.pop('required')
+        
+        return output
+    
+    output['definitions']['element'] = _converter(gbq_schema)
 
     output['definitions']['element']['additionalProperties'] = additional_properties
 
