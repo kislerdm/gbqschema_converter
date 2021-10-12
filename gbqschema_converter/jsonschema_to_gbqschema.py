@@ -9,7 +9,7 @@ import fastjsonschema
 
 
 MapTypes = namedtuple("map_types",
-                      ['integer', 'number', 'boolean', 'string', 'date', 'object'])
+                      ['integer', 'number', 'boolean', 'string', 'date', 'object', 'array'])
 
 map_types = MapTypes(
     integer="INT64",
@@ -17,7 +17,8 @@ map_types = MapTypes(
     boolean="BOOLEAN",
     string="STRING",
     date="DATE",
-    object="RECORD"
+    object="RECORD",
+    array="STRING",
 )
 
 TEMPLATE_GBQ_COLUMN = {
@@ -84,9 +85,10 @@ def _converter(json_schema: dict,
                 gbq_column['type'] = "TIMESTAMP" if v['format'] == "date-time"\
                     else getattr(map_types, v['format']) if v['format'] in map_types.__dir__()\
                     else "STRING"
-
+            if v['type'] == "array":
+               gbq_column['mode'] = "REPEATED" 
             if required:
-                if k in required:
+                if k in required and v['type'] not in ("array",):
                     gbq_column['mode'] = "REQUIRED"
 
             if 'description' in v:
